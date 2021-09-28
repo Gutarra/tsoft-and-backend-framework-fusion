@@ -1,29 +1,32 @@
 package com.tsoft.bot.frontend.utility;
 
-
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 public class ExcelReader {
+    private ExcelReader() {
+    }
 
-    public static List<HashMap<String, String>> data(String rutaRelativaExcel, String nombreHoja) throws Throwable {
+    public static List<HashMap<String, String>> data(String rutaRelativaExcel, String nombreHoja) throws Exception {
 
         List<HashMap<String, String>> mydata = new ArrayList<>();
 
         FileInputStream fs = null;
+        XSSFWorkbook workbook = null;
 
         try {
 
@@ -35,7 +38,7 @@ public class ExcelReader {
 
             fs = new FileInputStream(rutaFile);
 
-            XSSFWorkbook workbook = new XSSFWorkbook(fs);
+            workbook = new XSSFWorkbook(fs);
 
             XSSFSheet sheet = workbook.getSheet(nombreHoja);
 
@@ -57,8 +60,6 @@ public class ExcelReader {
                 for (int j = 0; j < nroColumnas; j++) {
 
                     Cell currentCell = currentRow.getCell(j);
-
-                    // NOTA: solo considera a las celdas del tipo string, cualquier otro caso lo pone como cadena vacía
                     if (currentCell != null) {
 
                         if (currentCell.getCellTypeEnum().equals(CellType.STRING)) {
@@ -92,16 +93,12 @@ public class ExcelReader {
                                     inputString);
 
                         } else {
-
-                            // por default se pone empty si no es ni string, ni blank, ni numeric
                             currentHash.put(
                                     StringUtils.trimToEmpty(headerRow.getCell(j).getStringCellValue()),
                                     StringUtils.EMPTY);
                         }
 
                     } else {
-
-                        // por default se pone empty si es null
                         currentHash.put(
                                 StringUtils.trimToEmpty(headerRow.getCell(j).getStringCellValue()),
                                 StringUtils.EMPTY);
@@ -118,16 +115,17 @@ public class ExcelReader {
             throw e;
 
         } finally {
-
-            IOUtils.closeQuietly(fs);
+            assert workbook != null;
+            workbook.close();
         }
 
         return mydata;
     }
 
-    public static void writeCellValue(String rutaRelativaExcel, String sheetName, int rowNumber, int cellNumber, String resultText) {
+    public static void writeCellValue(String rutaRelativaExcel, String sheetName, int rowNumber, int cellNumber, String resultText) throws IOException {
 
         FileInputStream fs = null;
+        XSSFWorkbook newWorkbook = null;
 
         try {
 
@@ -139,7 +137,7 @@ public class ExcelReader {
 
             fs = new FileInputStream(rutaFile);
 
-            XSSFWorkbook newWorkbook = new XSSFWorkbook(fs);
+            newWorkbook = new XSSFWorkbook(fs);
 
             XSSFSheet newSheet = newWorkbook.getSheet(sheetName);
 
@@ -150,8 +148,6 @@ public class ExcelReader {
             CellStyle style = newWorkbook.createCellStyle();
 
             Font font = newWorkbook.createFont();
-
-            font.setColor(HSSFColor.GREEN.index);
 
             style.setFont(font);
 
@@ -168,8 +164,13 @@ public class ExcelReader {
             outputStream.close();
 
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            Logger.getLogger(" Shows: "+ e.getMessage());
         }
+        finally {
+            assert newWorkbook != null;
+            newWorkbook.close();
+        }
+
     }
 
 }

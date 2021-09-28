@@ -2,29 +2,29 @@ package com.tsoft.bot.frontend.listener;
 
 import com.tsoft.bot.frontend.utility.ExtentReportUtil;
 import com.tsoft.bot.frontend.utility.FileHelper;
-import org.testng.ITestContext;
-import org.testng.ITestListener;
-import org.testng.ITestResult;
+
+import java.util.logging.Logger;
 
 public class Listener {
 
-    private static boolean SE_BORRARON_FILES = false;
+    private boolean deleteFiles = false;
 
-    public void onTestStart(String nombre) {
+    protected void onTestStart(String name) {
         try {
-            ExtentReportUtil.INSTANCE.createTest(nombre);
+            ExtentReportUtil.INSTANCE.createTest(name);
         } catch (Exception e) {
-            System.out.println("[ERROR CRL-4213] Error en onTestStart: " + e.getMessage());
+            Logger.getLogger("[ERROR CRL-4213] Error en onTestStart: " + e.getMessage());
         }
     }
 
     public void onStart() {
-        if (!SE_BORRARON_FILES) {
-            FileHelper.borrarElementosFolder("/img");
-            SE_BORRARON_FILES = true;
+        if (!deleteFiles) {
+            FileHelper.deleteFolderElements("/img");
+            deleteFiles = true;
         }
     }
-    public void onFinish() {
+
+    protected void onFinish() {
         ExtentReportUtil.INSTANCE.flushReport();
     }
 }

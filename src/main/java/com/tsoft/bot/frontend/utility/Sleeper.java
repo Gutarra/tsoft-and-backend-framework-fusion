@@ -1,15 +1,24 @@
+/*
+    @author: Abraham Hernandez - TSOFT
+*/
 package com.tsoft.bot.frontend.utility;
+
+import java.util.logging.Logger;
 
 public class Sleeper {
 
-    private static final double escala = 1.5; // cloud
+    private Sleeper() {
+    }
 
-    public static void Sleep(int tiempo) {
+    private static final double ESCALA = 1.8;
+
+    public static void sleep(int tiempo) {
         try {
             if (tiempo <= 0) return;
-            Thread.sleep((long) (tiempo * escala));
+            Thread.sleep((long) (tiempo * ESCALA));
         } catch (InterruptedException e) {
-            System.out.println("[ERROR] " + e.getMessage());
+            Thread.currentThread().interrupt();
+            Logger.getLogger("[LOG]-sleep: " + e.getMessage());
         }
     }
 }

@@ -7,6 +7,7 @@ import io.cucumber.java.es.Cuando;
 import io.cucumber.java.es.Dado;
 import io.cucumber.java.es.Entonces;
 import io.cucumber.java.es.Y;
+
 import static org.junit.Assert.*;
 
 public class ServiceSteps extends BaseClass {
@@ -41,6 +42,7 @@ public class ServiceSteps extends BaseClass {
 
     @Y("se añade el cuerpo de la solicitud desde el: {string}")
     public void seAniadeElCuerpoDeLaSolicitudDesdeEl(String dato) throws Throwable {
+        System.out.println(datoExcel(dato,ServiceExcelObjects.COLUMN_BODY));
         addBody(datoExcel(dato,ServiceExcelObjects.COLUMN_BODY));
     }
 
@@ -91,13 +93,13 @@ public class ServiceSteps extends BaseClass {
             assertEquals(valorEsperado,this.valueOfJsonpath);
 
     }
-    @Y("guardamos el {string} optenido mediante regexp")
-    public void guardamosElOptenidoMedianteRegexp(String data) throws Throwable {
+    @Y("guardamos el {string} obtenido mediante regexp")
+    public void guardamosElObtenidoMedianteRegexp(String data) throws Throwable {
         saveParameter(datoExcel(data,ServiceExcelObjects.COLUMN_SAVEREGEXAS),valueOfRegex);
     }
 
-    @Y("guardamos el {string} optenido mediante jsonpath")
-    public void guardamosElOptenidoMedianteJsonpath(String data) throws Throwable {
+    @Y("guardamos el {string} obtenido mediante jsonpath")
+    public void guardamosElObtenidoMedianteJsonpath(String data) throws Throwable {
         saveParameter(datoExcel(data,ServiceExcelObjects.COLUMN_SAVEJSONPATHAS),valueOfJsonpath);
     }
 }
