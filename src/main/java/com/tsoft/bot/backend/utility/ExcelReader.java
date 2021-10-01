@@ -34,9 +34,9 @@ public class ExcelReader {
             if (rutaExcel.contains(":"))
                 ruta = rutaExcel;
             else if (rutaExcel.equals("DEFAULT"))
-                ruta = FileHelper.getProjectFolder() + "/src/test/resources/excel/ProyectoAPI.xlsx";
+                ruta = FileHelper.getProjectFolder() + "/src/test/resources/excel/ProyectoAPI.xlsm";
             else
-                ruta = FileHelper.getProjectFolder() + "/src/test/resources/excel/" + rutaExcel + ".xlsx";
+                ruta = FileHelper.getProjectFolder() + "/src/test/resources/excel/" + rutaExcel;
 
             File rutaFile = new File(ruta);
 

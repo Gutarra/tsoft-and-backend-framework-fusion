@@ -8,98 +8,70 @@ import io.cucumber.java.es.Dado;
 import io.cucumber.java.es.Entonces;
 import io.cucumber.java.es.Y;
 
-import static org.junit.Assert.*;
-
 public class ServiceSteps extends BaseClass {
 
-
-
-    @Dado("que se tiene un archivo {string} con los datos para la prueba")
-    public void queSeTieneUnArchivoConLosDatosParaLaPrueba(String ruta) throws Throwable {
+    @Dado("que se proporciona un archivo {string} con el {string} para la prueba")
+    public void queSeProporcionaUnArchivoConElDatoParaLaPrueba(String ruta,String data) throws Throwable {
         setExcel(ruta);
         this.getData = ExcelReader.data(this.RUTA_EXCEL, ServiceExcelObjects.PAGE_DATA);
+        setTestDetails(dataExcel(data,ServiceExcelObjects.COLUMN_CASE), dataExcel(data,ServiceExcelObjects.COLUMN_DESC));
     }
 
-    @Cuando("se configura la url: {string}")
-    public void seConfiguraLaUrl(String dato) throws Throwable {
-        setURL(datoExcel(dato,ServiceExcelObjects.COLUMN_RUTA));
+    @Cuando("configuramos la url desde el : {string}")
+    public void configuramosLaUrlDesdeEl(String dato) throws Throwable {
+        setURL(dataExcel(dato,ServiceExcelObjects.COLUMN_RUTA));
     }
 
-    @Y("se configura los parametros de busqueda: {string}")
-    public void seConfiguraLosParametrosDeBusqueda(String dato) throws Throwable {
-        setParameters(datoExcel(dato,ServiceExcelObjects.COLUMN_PARAMETERS));
+    @Y("se configura el metodo de la solicitud: {string}")
+    public void seConfiguraElMetodoDeLaSolicitud(String dato) throws Throwable {
+        configureMethod(dataExcel(dato,ServiceExcelObjects.COLUMN_METHOD));
     }
 
-    @Y("se configura el tipo de solicitud: {string}")
-    public void seConfiguraElTipoDeSolicitud(String dato) throws Throwable  {
-        configureMethod(datoExcel(dato,ServiceExcelObjects.COLUMN_METODO));
+    @Y("agregamos los headers desde el {string}")
+    public void agregamosLosHeadersDesdeEl(String dato) throws Throwable {
+        setHeaders(dataExcel(dato,ServiceExcelObjects.COLUMN_HEADERS));
     }
 
-    @Y("se agregan los headers especificados: {string}")
-    public void seAgreganLosHeadersEspecificados(String dato) throws Throwable {
-        setHeaders(datoExcel(dato,ServiceExcelObjects.COLUMN_HEADERSK),datoExcel(dato,ServiceExcelObjects.COLUMN_HEADERSV));
+    @Y("adjuntamos el body a la solicitud desde el {string}")
+    public void adjuntamosElBodyALaSolicitudDesdeEl(String dato) throws Throwable {
+        addBody(dataExcel(dato,ServiceExcelObjects.COLUMN_BODY));
     }
 
-    @Y("se añade el cuerpo de la solicitud desde el: {string}")
-    public void seAniadeElCuerpoDeLaSolicitudDesdeEl(String dato) throws Throwable {
-        System.out.println(datoExcel(dato,ServiceExcelObjects.COLUMN_BODY));
-        addBody(datoExcel(dato,ServiceExcelObjects.COLUMN_BODY));
+    @Y("configuramos los parameters o query strings desde el {string}")
+    public void configuramosLosParametersOQueryStringsDesdeEl(String dato) throws Throwable {
+        setParameters(dataExcel(dato,ServiceExcelObjects.COLUMN_PARAMETERS));
     }
 
-    @Y("se envia la solicitud al servidor")
-    public void seEnviaLaSolicitudAlServidor() {
+    @Entonces("enviamos la solicitud al servidor")
+    public void enviamosLaSolicitudAlServidor() {
         sendRequest();
     }
 
-    @Entonces("se verifica el código de respuesta del servidor según el:{string}")
-    public void seVerificaElCodigoDeRespuestaDelServidorSegunEl(String casoPrueba) throws Throwable {
-        int codigoEsperado = Integer.parseInt(datoExcel(casoPrueba, ServiceExcelObjects.COLUMN_CRE));
-        currentResponse.then().statusCode(codigoEsperado);
+    @Y("verificamos el status code:{string}")
+    public void verificamosElStatusCode(String dato) throws Throwable {
+        int statusCodeExpected = Integer.parseInt(dataExcel(dato, ServiceExcelObjects.COLUMN_CRE));
+        currentResponse.then().statusCode(statusCodeExpected);
     }
 
-    @Y("se valida el tipo de respuesta esperado según el: {string}")
-    public void seValidaElTipoDeRespuestaEsperadoSegunEl(String casoPrueba) throws Throwable {
-        String contentTypeEsperado = datoExcel(casoPrueba, ServiceExcelObjects.COLUMN_VALIDARCTYPE);
-        currentResponse.then().contentType(contentTypeEsperado);
+    @Y("validamos el Content-Type de la respuesta: {string}")
+    public void validamosElContentTypeDeLaRespuesta(String dato) throws Throwable {
+        String contentTypeExpected = dataExcel(dato, ServiceExcelObjects.COLUMN_VALIDATECTYPE);
+        currentResponse.then().contentType(contentTypeExpected);
     }
 
-    @Y("se valida la respuesta con un esquema json según el:{string}")
-    public void seValidaLaRespuestaConUnEsquemaJsonSegunEl(String dato) throws Throwable {
-        String validarjson = datoExcel(dato, ServiceExcelObjects.COLUMN_VLDEJ);
-        validaresquemajson(validarjson);
+    @Cuando("la respuesta es de tipo applicationjson se valida mediante un squema json:{string}")
+    public void laRespuestaEsDeTipoApplicationJsonSeValidaMedianteUnSquemaJson(String dato) throws Throwable {
+        String jsonSchema = dataExcel(dato, ServiceExcelObjects.COLUMN_VLDEJ);
+        validateJSONSchema(jsonSchema);
     }
 
-    @Y("se captura un dato mediante una regex: {string}")
-    public void seCapturaUnDatoMedianteUnaRegex(String dato) throws Throwable {
-        regExprExtractor(datoExcel(dato,ServiceExcelObjects.COLUMN_VLDREGEX), currentResponse.getBody().asString(),datoExcel(dato,ServiceExcelObjects.COLUMN_REGEXGROUP));
+    @Y("capturamos un dato mediante una regex:{string}")
+    public void capturamosUnDatoMedianteUnaRegex(String data) throws Throwable {
+        saveRegex(dataExcel(data,ServiceExcelObjects.COLUMN_REGEX),currentResponse);
     }
 
-    @Y("se compara el resultado del regex: {string}")
-    public void seComparaElResultadoDelRegex(String dato) throws Throwable {
-        String valorEsperado = datoExcel(dato, ServiceExcelObjects.COLUMN_REGEXVALE);
-        if (!valorEsperado.equals(""))
-            assertEquals(valorEsperado,this.valueOfRegex);
-    }
-
-    @Y("se captura un dato mediante una query de jsonpath: {string}")
-    public void seCapturaUnDatoMedianteUnaQueryDeJsonpath(String dato) throws Throwable  {
-        jsonPathExtractor(datoExcel(dato,ServiceExcelObjects.COLUMN_VLDJSONPATH),currentResponse);
-    }
-
-    @Y("se compara el resultado del jsonpath: {string}")
-    public void seComparaElResultadoDelJsonpath(String dato) throws Throwable {
-        String valorEsperado = datoExcel(dato, ServiceExcelObjects.COLUMN_JSONPATHVALE);
-        if (!valorEsperado.equals(""))
-            assertEquals(valorEsperado,this.valueOfJsonpath);
-
-    }
-    @Y("guardamos el {string} obtenido mediante regexp")
-    public void guardamosElObtenidoMedianteRegexp(String data) throws Throwable {
-        saveParameter(datoExcel(data,ServiceExcelObjects.COLUMN_SAVEREGEXAS),valueOfRegex);
-    }
-
-    @Y("guardamos el {string} obtenido mediante jsonpath")
-    public void guardamosElObtenidoMedianteJsonpath(String data) throws Throwable {
-        saveParameter(datoExcel(data,ServiceExcelObjects.COLUMN_SAVEJSONPATHAS),valueOfJsonpath);
+    @Y("capturamos un dato mediante un jsonpath:{string}")
+    public void capturamosUnDatoMedianteUnJsonpath(String data) throws Throwable {
+        saveJsonpath(dataExcel(data,ServiceExcelObjects.COLUMN_JSONPATH),currentResponse);
     }
 }

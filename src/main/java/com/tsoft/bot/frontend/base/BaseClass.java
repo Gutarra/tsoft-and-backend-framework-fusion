@@ -4,6 +4,7 @@ import com.tsoft.bot.frontend.exceptions.FrontEndException;
 import com.tsoft.bot.frontend.utility.ExtentReportUtil;
 import com.tsoft.bot.frontend.utility.GenerateWord;
 import com.tsoft.bot.frontend.utility.Sleeper;
+import net.serenitybdd.core.Serenity;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
@@ -134,8 +135,21 @@ public class BaseClass {
     }
 
     protected void errorNoElementFound(WebDriver driver, By locator) throws IOException {
+        Serenity.recordReportData().withTitle("Error").andContents("- No se encontró el elemento : " + locator);
         generateWord.sendText("Error : No se encontró el elemento : " + locator);
         generateWord.addImageToWord(driver);
         driver.close();
+    }
+    /* has been adding more methods*/
+    protected void addImageReport(WebDriver driver,String title)
+    {
+        try
+        {
+            Serenity.recordReportData().withTitle(title).downloadable().fromFile(ScreenShotClass.takeScreenShoot(driver));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

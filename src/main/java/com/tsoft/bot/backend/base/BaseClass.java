@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static org.junit.Assert.*;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static net.serenitybdd.rest.SerenityRest.given;
@@ -34,13 +35,18 @@ public class BaseClass {
     public void setExcel(String ruta) {
         this.RUTA_EXCEL = ruta;
     }
+    public void setTestDetails(String testcase, String description)
+    {
+        String details = "CASO: " + testcase + ", " + description;
+        Serenity.recordReportData().withTitle("Detalles del caso").andContents(details);
+    }
 
     protected List<HashMap<String, String>> getData;
 
     //Metodo integrado :P
-    public String datoExcel(String casoPrueba, String columna) throws Throwable {
-        int countPage = Integer.parseInt(casoPrueba) - 1;
-        return getData.get(countPage).get(columna);
+    public String dataExcel(String test_case, String col) throws Throwable {
+        int countPage = Integer.parseInt(test_case) - 1;
+        return getData.get(countPage).get(col);
     }
 
 
@@ -99,24 +105,13 @@ public class BaseClass {
             this.URL = url;
     }
 
-    public void setHeaders(String stringHeaders, String stringValues) throws IOException {
+    public void setHeaders(String stringHeaders) throws IOException {
         if (!stringHeaders.equals(""))
         {
-            if (stringValues.contains("echo %"))
-                stringValues = changeStringWithParameters(stringValues);
-            String[] headers;
-            String[] values;
-            if (!stringHeaders.equals("ARCHIVO"))
-            {
-                headers = stringHeaders.split(",");
-                values = stringValues.split(",");
-            }
-            else
-            {
-                headers = extractValues(stringHeaders + stringValues,"KEYS");
-                values = extractValues(stringHeaders + stringValues,"VALUES");
-            }
-
+            if (stringHeaders.contains("echo %"))
+                stringHeaders = changeStringWithParameters(stringHeaders);
+            String[] headers = extractValues(stringHeaders,"KEYS");
+            String[] values = extractValues(stringHeaders,"VALUES");
             for (int i = 0; i < headers.length; i++)
             {
                 ReqManager.header(headers[i],values[i]);
@@ -221,6 +216,57 @@ public class BaseClass {
             delete();
     }
 
+    public void saveRegex(String stringRegexValues, Response response)
+    {
+        if (!stringRegexValues.equals(""))
+        {
+            String[] regexValuesStrings = stringRegexValues.split("_regex;\r\n");
+            int x = 0;
+            while (x < regexValuesStrings.length)
+            {
+                String regex, group,valExpected,scope,paramToSave,source,report;
+                String[] values = regexValuesStrings[x].split("',last,'");
+                regex = values[0].split("regex'")[1];
+                group = values[1];
+                valExpected = values[2];
+                scope = values[3];
+                paramToSave = values[4].split("',end")[0];
+
+                if (scope.equals("") || (scope.equals("BODY")) )
+                    source = response.getBody().asString();
+                else if (scope.equals("HEADERS"))
+                    source = response.getHeaders().toString();
+                else if (scope.equals("COOKIES"))
+                    source = response.getCookies().toString();
+                else
+                    source = "scope has not been defined";
+
+                regExprExtractor(regex,source,group);
+                report = "expresión regular: '"+regex;
+                if (!group.equals(""))
+                    report +="' - grupo de busqueda: '"+group+"'\n";
+                else
+                    report += "' - grupo de busqueda: '1'\n";
+                if (!scope.equals(""))
+                    report += "buscado en: '" + scope+"'\nvalor obtenido: '"+this.valueOfRegex+"'";
+                else
+                    report += "buscado en: 'BODY'\nvalor obtenido: '"+this.valueOfRegex+"'";
+
+                if (!valExpected.equals("")) {
+                    assertEquals(valExpected,this.valueOfRegex);
+                    report += " - valor esperado: '" + valExpected + "'";
+                }
+                Serenity.recordReportData().withTitle("Validador regex N°" + (x+1)).andContents(report);
+                if (!paramToSave.equals("")) {
+                    saveParameter(paramToSave,this.valueOfRegex);
+                    this.valueOfRegex = "";
+                }
+                x++;
+            }
+
+        }
+    }
+
     public void regExprExtractor(String expression, String source, String group)
     {
         if (!expression.equals(""))
@@ -249,6 +295,37 @@ public class BaseClass {
             return  "";
     }
 
+    public void saveJsonpath(String stringJsonpathVales,Response response)
+    {
+        if (!stringJsonpathVales.equals(""))
+        {
+            String[] regexValuesStrings = stringJsonpathVales.split("_jsonpath;\r\n");
+            int x = 0;
+            while (x < regexValuesStrings.length)
+            {
+                String jsonpath,valExpected,paramToSave,report;
+                String[] values = regexValuesStrings[x].split("',last,'");
+                jsonpath = values[0].split("jsonpath'")[1];
+                valExpected = values[1];
+                paramToSave = values[2].split("',end")[0];
+
+                jsonPathExtractor(jsonpath,response);
+                report = "query de jsonpath: '"+ jsonpath+"'\nvalor obtenido: '"+this.valueOfJsonpath+"'";
+                if (!valExpected.equals("")) {
+                    assertEquals(valExpected,this.valueOfJsonpath);
+                    report += " - valor esperado: '" + valExpected + "'";
+                }
+                Serenity.recordReportData().withTitle("Validador jsonpath N°" + (x+1)).andContents(report);
+                if (!paramToSave.equals("")) {
+                    saveParameter(paramToSave,this.valueOfJsonpath);
+                    this.valueOfRegex = "";
+                }
+                x++;
+            }
+
+        }
+    }
+
     public void jsonPathExtractor(String jsonPathExpression, Response source)
     {
         if (!jsonPathExpression.equals("") && source.getContentType().contains("application/json"))
@@ -275,7 +352,7 @@ public class BaseClass {
         return formatString;
     }
 
-    public void validaresquemajson(String json) throws IOException {
+    public void validateJSONSchema(String json) throws IOException {
         if (json.equals("")){
             Serenity.recordReportData()
                     .withTitle("No corresponde Validacion")

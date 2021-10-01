@@ -1,59 +1,23 @@
 # language: es
 Característica: Probar APIs
-	@All
+	@API
   	Esquema del escenario: Prueba API
-		Dado que se tiene un archivo "<Excel>" con los datos para la prueba
-		Y se agregan los headers especificados: "<Dato>"
-		Y se añade el cuerpo de la solicitud desde el: "<Dato>"
-		Y se configura los parametros de busqueda: "<Dato>"
-		Cuando se configura la url: "<Dato>"
-		Y se configura el tipo de solicitud: "<Dato>"
-		Y se envia la solicitud al servidor
-		Entonces se verifica el código de respuesta del servidor según el:"<Dato>"
-		Y se valida el tipo de respuesta esperado según el: "<Dato>"
-		Y se valida la respuesta con un esquema json según el:"<Dato>"
-		Y se captura un dato mediante una regex: "<Dato>"
-		Y se compara el resultado del regex: "<Dato>"
-		Y guardamos el "<Dato>" obtenido mediante regexp
-		Y se captura un dato mediante una query de jsonpath: "<Dato>"
-		Y se compara el resultado del jsonpath: "<Dato>"
-		Y guardamos el "<Dato>" obtenido mediante jsonpath
+		Dado que se proporciona un archivo "<Excel>" con el "<Dato>" para la prueba
+		Cuando configuramos la url desde el : "<Dato>"
+		Y se configura el metodo de la solicitud: "<Dato>"
+		Y agregamos los headers desde el "<Dato>"
+		Y adjuntamos el body a la solicitud desde el "<Dato>"
+		Y configuramos los parameters o query strings desde el "<Dato>"
+		Entonces enviamos la solicitud al servidor
+		Y verificamos el status code:"<Dato>"
+		Y validamos el Content-Type de la respuesta: "<Dato>"
+		Cuando la respuesta es de tipo applicationjson se valida mediante un squema json:"<Dato>"
+		Y capturamos un dato mediante una regex:"<Dato>"
+		Y capturamos un dato mediante un jsonpath:"<Dato>"
 
 		Ejemplos:
 	  		|     Excel          |    Dato       |
-	  		#|DEFAULT         	 |1              |
-	  		#|ProyectoAPI         |2              |
-	  		#|ProyectoAPI         |3              |
-	  		#|ProyectoAPI         |4              |
-	  		#|ProyectoAPI         |5              |
-	  		#|ProyectoAPI         |6              |
-	  		#|ProyectoAPI         |7              |
-	  		#|ProyectoAPI         |8              |
-	  		#|ProyectoAPI         |9              |
-	  		|ProyectoAPI         |10             |
-	  		#|ProyectoAPI       	 |11             |
-	  		#|DEFAULT	         |12             |
-
-	@apitest
-	Esquema del escenario: Prueba API
-		Dado que se tiene un archivo "<Excel>" con los datos para la prueba
-		Y se agregan los headers especificados: "<Dato>"
-		Y se añade el cuerpo de la solicitud desde el: "<Dato>"
-		Y se configura los parametros de busqueda: "<Dato>"
-		Cuando se configura la url: "<Dato>"
-		Y se configura el tipo de solicitud: "<Dato>"
-		Y se envia la solicitud al servidor
-		Entonces se verifica el código de respuesta del servidor según el:"<Dato>"
-		Y se valida el tipo de respuesta esperado según el: "<Dato>"
-		Y se valida la respuesta con un esquema json según el:"<Dato>"
-		Y se captura un dato mediante una regex: "<Dato>"
-		Y se compara el resultado del regex: "<Dato>"
-		Y guardamos el "<Dato>" obtenido mediante regexp
-		Y se captura un dato mediante una query de jsonpath: "<Dato>"
-		Y se compara el resultado del jsonpath: "<Dato>"
-		Y guardamos el "<Dato>" obtenido mediante jsonpath
-
-		Ejemplos:
-			|     Excel          |    Dato       |
-			|ProyectoAPI         |1              |
-			|ProyectoAPI         |2            	 |
+	  		| ProyectoAPI.xlsm   | 1             |
+	  		| ProyectoAPI.xlsm   | 2             |
+	  		| ProyectoAPI.xlsm   | 11            |
+	  		| ProyectoAPI.xlsm   | 12            |

@@ -12,7 +12,7 @@ Feature: Buying products
         | test_case |
         | 1         |
 
-    @buy-product
+    @buy-product-auto
     Scenario Outline: Buying evening dresses in automationpractice.com
         Given go to the website automation
         When the user sign in on page

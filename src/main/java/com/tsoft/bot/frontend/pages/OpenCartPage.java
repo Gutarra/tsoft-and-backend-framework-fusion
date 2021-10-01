@@ -1,11 +1,13 @@
 package com.tsoft.bot.frontend.pages;
 
 import com.tsoft.bot.frontend.base.BaseClass;
+import com.tsoft.bot.frontend.base.ScreenShotClass;
 import com.tsoft.bot.frontend.helpers.Hook;
 import com.tsoft.bot.frontend.objects.OpenCartObjects;
 import com.tsoft.bot.frontend.objects.ExcelDataObjects;
 import com.tsoft.bot.frontend.utility.ExcelReader;
 import com.tsoft.bot.frontend.utility.GenerateWord;
+import net.serenitybdd.core.Serenity;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -32,7 +34,7 @@ public class OpenCartPage extends BaseClass
     protected void awaitFor(WebDriver driver, By locator) throws IOException {
         try {
             WebDriverWait wait = new WebDriverWait(driver, 30);
-            wait.until(ExpectedConditions.visibilityOf(driver.findElement(locator)));
+            wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(locator)));
         }catch (RuntimeException we){
             errorNoElementFound(driver, locator);
             throw we;
@@ -62,6 +64,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
             click(browser, OpenCartObjects.BTN_TOSIGNIN);
         }
         catch (Exception we)
@@ -88,6 +91,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
             click(browser, OpenCartObjects.BTN_LOGIN);
         }
         catch (Exception we)
@@ -108,6 +112,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
             click(browser, OpenCartObjects.SMIT_LAPTOPS_SHOWALL);
 
             awaitFor(browser,OpenCartObjects.LAPTOPS_AWAIT);
@@ -117,6 +122,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
             click(browser,OpenCartObjects.LAPTOP_HP);
 
             message = "agregando laptop HP al carrito";
@@ -124,6 +130,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
             browser.navigate().back();
 
             awaitFor(browser,OpenCartObjects.LAPTOPS_AWAIT);
@@ -131,6 +138,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
             click(browser,OpenCartObjects.LAPTOP_MACK);
 
             message = "agregando laptop MACK al carrito";
@@ -138,6 +146,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
         }
         catch (Exception we)
         {
@@ -157,6 +166,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
             click(browser,OpenCartObjects.NVIT_CAMERAS);
 
             awaitFor(browser,OpenCartObjects.CAMERAS_AWAIT);
@@ -165,6 +175,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
             click(browser,OpenCartObjects.CAMERA_NIKON);
 
             awaitFor(browser,OpenCartObjects.BTN_ADDCART);
@@ -173,6 +184,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
         }
         catch (Exception we)
         {
@@ -193,18 +205,21 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
 
-            message = "Comparando montos finales";
+            message = "Comparando montos finales\n";
             generateWord.sendText(message);
             double total, subtotal;
             total = getTotalOfDetails(browser,OpenCartObjects.SHPC_TOTALITEMS);
             subtotal = getValue(browser,OpenCartObjects.SHPC_SUBTOTAL);
+            scroll(browser,0,650);
             if (total == subtotal)
             {
                 message = "Cálculo de montos correcto";
                 stepPass(browser, message);
                 generateWord.sendText(message);
                 generateWord.addImageToWord(browser);
+                addImageReport(browser,message);
             }
             else
             {
@@ -212,8 +227,8 @@ public class OpenCartPage extends BaseClass
                 stepFail(browser,message);
                 generateWord.sendText(message);
                 generateWord.addImageToWord(browser);
+                addImageReport(browser,message);
             }
-            scroll(browser,0,520);
             click(browser,OpenCartObjects.SHPC_CONTINUE);
         }
         catch (Exception we)
@@ -230,9 +245,10 @@ public class OpenCartPage extends BaseClass
         try
         {
             awaitFor(browser,OpenCartObjects.BILLING_CONTINUE);
+            addImageReport(browser,message.split(",")[0]);
             click(browser,OpenCartObjects.BILLING_NEWADDRESS);
             scroll(browser,0,-1000);
-            scroll(browser,0,416);
+            scroll(browser,0,520);
 
             String firstname,lastname,address,city,postcode;
             firstname = getDataForDetails().get(ncase - 1).get(ExcelDataObjects.COLUMN_FIRSTNAME);
@@ -259,11 +275,13 @@ public class OpenCartPage extends BaseClass
             awaitFor(browser,OpenCartObjects.BILLING_ZONE_SELECT);
             click(browser,OpenCartObjects.BILLING_ZONE);
             click(browser,OpenCartObjects.BILLING_ZONE_SELECT);
+            click(browser,OpenCartObjects.BILLING_ZONE);
 
             awaitFor(browser,OpenCartObjects.BILLING_CONTINUE);
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message.split(",")[1]);
             click(browser,OpenCartObjects.BILLING_CONTINUE);
         }
         catch (Exception we)
@@ -285,6 +303,7 @@ public class OpenCartPage extends BaseClass
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
             click(browser,OpenCartObjects.DELIVERY_DETAILS_CONTINUE);
         }
         catch (Exception we)
@@ -302,10 +321,11 @@ public class OpenCartPage extends BaseClass
         {
             awaitFor(browser,OpenCartObjects.DELIVERY_METHOD_CONTINUE);
             scroll(browser,0,-1000);
-            scroll(browser,0,190);
+            scroll(browser,0, 400);
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
             click(browser,OpenCartObjects.DELIVERY_METHOD_CONTINUE);
         }
         catch (Exception we)
@@ -324,11 +344,12 @@ public class OpenCartPage extends BaseClass
             awaitFor(browser,OpenCartObjects.PAYMENT_CONTINUE);
             click(browser,OpenCartObjects.PAYMENT_AGREE);
             scroll(browser,0,-1000);
-            scroll(browser,0,190);
-            click(browser,OpenCartObjects.PAYMENT_CONTINUE);
+            scroll(browser,0,394);
             stepPass(browser, message);
             generateWord.sendText(message);
             generateWord.addImageToWord(browser);
+            addImageReport(browser,message);
+            click(browser,OpenCartObjects.PAYMENT_CONTINUE);
         }
         catch (Exception we)
         {
@@ -345,13 +366,13 @@ public class OpenCartPage extends BaseClass
         {
             awaitFor(browser,OpenCartObjects.CONFIRM_ORDER);
             scroll(browser,0 , -1000);
-            scroll(browser,0 , 250);
+            scroll(browser,0 , 530);
 
             message = "Comparando montos finales";
             double total, subtotal, flatShipping;
-            total = getValue(browser,OpenCartObjects.ORDER_TOTAL);System.out.println("step here passed 1");
-            subtotal = getValue(browser,OpenCartObjects.ORDER_SUBTOTAL);System.out.println("step here passed 2");
-            flatShipping = getValue(browser,OpenCartObjects.ORDER_SHIPPINGRATE);System.out.println("step here passed 3");
+            total = getValue(browser,OpenCartObjects.ORDER_TOTAL);
+            subtotal = getValue(browser,OpenCartObjects.ORDER_SUBTOTAL);
+            flatShipping = getValue(browser,OpenCartObjects.ORDER_SHIPPINGRATE);
 
             if (total == ( subtotal + flatShipping))
             {
@@ -359,6 +380,7 @@ public class OpenCartPage extends BaseClass
                 stepPass(browser, message);
                 generateWord.sendText(message);
                 generateWord.addImageToWord(browser);
+                addImageReport(browser,message);
             }
             else
             {
@@ -366,6 +388,7 @@ public class OpenCartPage extends BaseClass
                 stepFail(browser,message);
                 generateWord.sendText(message);
                 generateWord.addImageToWord(browser);
+                addImageReport(browser,message);
             }
             click(browser,OpenCartObjects.CONFIRM_ORDER);
         }
@@ -382,14 +405,14 @@ public class OpenCartPage extends BaseClass
         message = "Buscando mensaje";
         try
         {
-            scroll(browser,0 , -1000);
-            scroll(browser,0 , 250);
             if (isDisplayed(browser, OpenCartObjects.SUCCESS_STATE))
             {
                 message += "\nSe encontro el mensaje esperado";
+                scroll(browser,0 , 172);
                 stepPass(browser, message);
                 generateWord.sendText(message);
                 generateWord.addImageToWord(browser);
+                addImageReport(browser,"Confirmación de compra");
                 click(browser,OpenCartObjects.CONTINUE_HOME);
                 this.browser.quit();
             }
@@ -399,6 +422,7 @@ public class OpenCartPage extends BaseClass
                 stepFail(browser,message);
                 generateWord.sendText(message);
                 generateWord.addImageToWord(browser);
+                addImageReport(browser,"resultado no esperado");
                 this.browser.quit();
             }
         }
@@ -417,8 +441,9 @@ public class OpenCartPage extends BaseClass
         int cnt = 0, max = driver.findElements(selectors).size();
         while (cnt < max)
         {
-            String number =  driver.findElements(selectors).get(cnt).getText().substring(1);
+            String number =  driver.findElements(selectors).get(cnt).getText();
             number = number.replace(",","");
+            number = number.replace("$","");
             Double val = Double.parseDouble(number);
             total += val;
             cnt++;
@@ -428,7 +453,7 @@ public class OpenCartPage extends BaseClass
     protected Double getValue(WebDriver driver, By selector)
     {
         Double subtotal = 0.0;
-        subtotal = Double.parseDouble(driver.findElement(selector).getText().substring(1));
+        subtotal = Double.parseDouble(driver.findElement(selector).getText().replace("$","").replace(",",""));
         return subtotal;
     }
 }

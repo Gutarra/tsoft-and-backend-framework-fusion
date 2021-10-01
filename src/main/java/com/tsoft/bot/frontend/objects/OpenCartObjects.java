@@ -43,7 +43,7 @@ public class OpenCartObjects {
     public static final By BILLING_COUNTRY_SELECT = By.cssSelector("#input-payment-country option[value=\"167\"]");
     public static final By BILLING_ZONE = By.id("input-payment-zone");
     public static final By BILLING_ZONE_SELECT = By.cssSelector("#input-payment-zone option[value=\"2541\"]");
-    public static final By BILLING_CONTINUE = By.id("button-payment-address");
+    public static final By BILLING_CONTINUE = By.cssSelector("#button-payment-address");
 
     //Delivery
     public static final By DELIVERY_DETAILS_CONTINUE = By.id("button-shipping-address");
@@ -61,5 +61,7 @@ public class OpenCartObjects {
 
     //Order successfully
     public static final By SUCCESS_STATE = By.cssSelector(".breadcrumb li:nth-child(4)");
+    public static final By FINAL_MESSAGE = By.id("content");
     public static final By CONTINUE_HOME = By.cssSelector(".buttons div a");
+
 }
