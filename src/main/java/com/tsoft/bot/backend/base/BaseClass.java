@@ -164,9 +164,9 @@ public class BaseClass {
             else
                 current = array1[i].split(":");
 
-            if (value == "KEYS")
+            if (value.equals("KEYS"))
                 values[i] = current[0];
-            else if (value == "VALUES")
+            else if (value.equals("VALUES"))
                 values[i] = current[1];
         }
         return values;

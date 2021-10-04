@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 @RunWith(CucumberWithSerenity.class)
 @CucumberOptions(
         plugin = {"pretty", "html:target/cucumber"},
-        tags = "@buy-product or @API",
+        tags = "@API",
         features = {
                 "src/test/resources/features/buyproducts",
                 "src/test/resources/features/service",

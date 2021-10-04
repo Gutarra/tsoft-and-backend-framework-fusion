@@ -50,6 +50,7 @@ public class StorePage extends BasePage
                 product = random.nextInt(max);
                 nameproduct = browser.findElements(AutomationObjects.NAMEPRODUCTS).get(product).getText();
                 scroll = browser.findElements(AutomationObjects.PRODUCTS).get(product).getLocation().y + browser.findElements(AutomationObjects.PRODUCTS).get(product).getSize().height;
+                scroll(browser,0,-1000);
                 scroll(browser,0,scroll);
                 hoverOfList(browser,AutomationObjects.PRODUCTS,product);
                 clickOfList(browser,AutomationObjects.BTN_ADDCARTPRODUCTS,product);
