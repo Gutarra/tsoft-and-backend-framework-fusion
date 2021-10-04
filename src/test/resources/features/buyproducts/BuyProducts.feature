@@ -11,14 +11,3 @@ Feature: Buying products
         Examples:
         | test_case |
         | 1         |
-
-    @buy-product-auto
-    Scenario Outline: Buying evening dresses in automationpractice.com
-        Given go to the website automation
-        When the user sign in on page
-        And buying "<quantity>" product
-        Then order is registered
-
-        Examples:
-            | quantity |
-            |  1       |

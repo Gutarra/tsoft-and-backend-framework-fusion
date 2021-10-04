@@ -3,7 +3,7 @@ package com.tsoft.bot.backend.base;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.tsoft.bot.backend.objects.ServiceObjects;
-import com.tsoft.bot.backend.utility.FileHelper;
+import com.tsoft.bot.frontend.utility.FileHelper;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
