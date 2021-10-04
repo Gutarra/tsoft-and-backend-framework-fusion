@@ -1,7 +1,7 @@
 package com.tsoft.bot.frontend.listener;
 
-import com.tsoft.bot.frontend.utility.ExtentReportUtil;
-import com.tsoft.bot.frontend.utility.FileHelper;
+import com.tsoft.bot.both.utility.ExtentReportUtil;
+import com.tsoft.bot.both.utility.FileHelper;
 
 import java.util.logging.Logger;
 

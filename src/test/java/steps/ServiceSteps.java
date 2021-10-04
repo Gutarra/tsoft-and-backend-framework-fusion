@@ -2,7 +2,7 @@ package steps;
 
 import com.tsoft.bot.backend.base.BaseClass;
 import com.tsoft.bot.backend.objects.ServiceExcelObjects;
-import com.tsoft.bot.frontend.utility.ExcelReader;
+import com.tsoft.bot.both.utility.ExcelReader;
 import io.cucumber.java.es.Cuando;
 import io.cucumber.java.es.Dado;
 import io.cucumber.java.es.Entonces;

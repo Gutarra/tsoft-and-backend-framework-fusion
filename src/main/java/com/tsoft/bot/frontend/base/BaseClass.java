@@ -1,9 +1,9 @@
 package com.tsoft.bot.frontend.base;
 
 import com.tsoft.bot.frontend.exceptions.FrontEndException;
-import com.tsoft.bot.frontend.utility.ExtentReportUtil;
-import com.tsoft.bot.frontend.utility.GenerateWord;
-import com.tsoft.bot.frontend.utility.Sleeper;
+import com.tsoft.bot.both.utility.ExtentReportUtil;
+import com.tsoft.bot.both.utility.GenerateWord;
+import com.tsoft.bot.both.utility.Sleeper;
 import net.serenitybdd.core.Serenity;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;

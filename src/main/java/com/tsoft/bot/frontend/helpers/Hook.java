@@ -1,8 +1,8 @@
 package com.tsoft.bot.frontend.helpers;
 
 import com.tsoft.bot.frontend.listener.Listener;
-import com.tsoft.bot.frontend.utility.FileHelper;
-import com.tsoft.bot.frontend.utility.GenerateWord;
+import com.tsoft.bot.both.utility.FileHelper;
+import com.tsoft.bot.both.utility.GenerateWord;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;

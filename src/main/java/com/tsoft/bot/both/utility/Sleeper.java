@@ -1,7 +1,7 @@
 /*
     @author: Abraham Hernandez - TSOFT
 */
-package com.tsoft.bot.frontend.utility;
+package com.tsoft.bot.both.utility;
 
 import java.util.logging.Logger;
 

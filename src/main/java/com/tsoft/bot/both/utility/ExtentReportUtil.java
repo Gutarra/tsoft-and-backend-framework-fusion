@@ -1,7 +1,7 @@
 /*
     @author: Abraham Hernandez - TSOFT
 */
-package com.tsoft.bot.frontend.utility;
+package com.tsoft.bot.both.utility;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;

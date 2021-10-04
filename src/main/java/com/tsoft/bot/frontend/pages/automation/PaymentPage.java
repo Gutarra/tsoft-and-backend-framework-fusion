@@ -2,7 +2,7 @@ package com.tsoft.bot.frontend.pages.automation;
 
 import com.tsoft.bot.frontend.objects.AutomationObjects;
 import com.tsoft.bot.frontend.objects.ExcelAutomationDataObjects;
-import com.tsoft.bot.frontend.utility.ExcelReader;
+import com.tsoft.bot.both.utility.ExcelReader;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;

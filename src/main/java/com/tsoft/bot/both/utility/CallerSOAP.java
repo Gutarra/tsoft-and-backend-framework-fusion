@@ -1,5 +1,5 @@
 /*@autor : Abraham Hernandez*/
-package com.tsoft.bot.frontend.utility;
+package com.tsoft.bot.both.utility;
 
 import com.tsoft.bot.frontend.exceptions.FrontEndException;
 import org.w3c.dom.NodeList;

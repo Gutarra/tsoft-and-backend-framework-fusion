@@ -1,7 +1,7 @@
 /*
     @author: Abraham Hernandez - TSOFT
 */
-package com.tsoft.bot.frontend.utility;
+package com.tsoft.bot.both.utility;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;

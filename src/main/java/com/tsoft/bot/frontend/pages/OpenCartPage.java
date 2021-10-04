@@ -1,13 +1,11 @@
 package com.tsoft.bot.frontend.pages;
 
 import com.tsoft.bot.frontend.base.BaseClass;
-import com.tsoft.bot.frontend.base.ScreenShotClass;
 import com.tsoft.bot.frontend.helpers.Hook;
 import com.tsoft.bot.frontend.objects.OpenCartObjects;
 import com.tsoft.bot.frontend.objects.ExcelDataObjects;
-import com.tsoft.bot.frontend.utility.ExcelReader;
-import com.tsoft.bot.frontend.utility.GenerateWord;
-import net.serenitybdd.core.Serenity;
+import com.tsoft.bot.both.utility.ExcelReader;
+import com.tsoft.bot.both.utility.GenerateWord;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
