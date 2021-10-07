@@ -67,11 +67,11 @@ public class ServiceSteps extends BaseClass {
 
     @Y("capturamos un dato mediante una regex:{string}")
     public void capturamosUnDatoMedianteUnaRegex(String data) throws Throwable {
-        saveRegex(dataExcel(data,ServiceExcelObjects.COLUMN_REGEX),currentResponse);
+        saveRegex(dataExcel(data,ServiceExcelObjects.COLUMN_REGEX),currentResponse,data);
     }
 
     @Y("capturamos un dato mediante un jsonpath:{string}")
     public void capturamosUnDatoMedianteUnJsonpath(String data) throws Throwable {
-        saveJsonpath(dataExcel(data,ServiceExcelObjects.COLUMN_JSONPATH),currentResponse);
+        saveJsonpath(dataExcel(data,ServiceExcelObjects.COLUMN_JSONPATH),currentResponse,data);
     }
 }

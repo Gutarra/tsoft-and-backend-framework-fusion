@@ -87,12 +87,14 @@ public class BaseClass {
                 if (body.contains("echo %"))
                     body = changeStringWithParameters(body);
                 ReqManager.body(body);
+                Serenity.recordReportData().withTitle("agregamos el body").andContents(body);
             }
             else
             {
                 if (stringBody.contains("echo %"))
                     stringBody = changeStringWithParameters(stringBody);
                 ReqManager.body(stringBody);
+                Serenity.recordReportData().withTitle("agregamos el body").andContents(stringBody);
             }
         }
     }
@@ -103,6 +105,7 @@ public class BaseClass {
             this.URL = changeStringWithParameters(url);
         else
             this.URL = url;
+        Serenity.recordReportData().withTitle("configuramos la url").andContents(this.URL);
     }
 
     public void setHeaders(String stringHeaders) throws IOException {
@@ -112,10 +115,13 @@ public class BaseClass {
                 stringHeaders = changeStringWithParameters(stringHeaders);
             String[] headers = extractValues(stringHeaders,"KEYS");
             String[] values = extractValues(stringHeaders,"VALUES");
+            String report = "";
             for (int i = 0; i < headers.length; i++)
             {
                 ReqManager.header(headers[i],values[i]);
+                report += headers[i]+","+values[i]+"\n";
             }
+            Serenity.recordReportData().withTitle("headers").andContents(report);
         }
     }
     public void setCookies(String[] names, String[] values)
@@ -179,11 +185,14 @@ public class BaseClass {
                 stringParameters = changeStringWithParameters(stringParameters);
             String[] keys = extractValues(stringParameters,"KEYS");
             String[] values = extractValues(stringParameters,"VALUES");
+            String report = "";
 
             for (int i = 0; i < keys.length; i++)
             {
                 ReqManager.param(keys[i],values[i]);
+                report += keys[i]+","+values[i]+"\n";
             }
+            Serenity.recordReportData().withTitle("parametros").andContents(report);
         }
     }
     public void setParam(String key, String value)
@@ -201,6 +210,7 @@ public class BaseClass {
     public void configureMethod(String Metodo)
     {
         this.METODO = Metodo;
+        Serenity.recordReportData().withTitle("configuramos el método").andContents(this.METODO);
     }
     public void sendRequest()
     {
@@ -216,19 +226,18 @@ public class BaseClass {
             delete();
     }
 
-    public void saveRegex(String stringRegexValues, Response response)
-    {
+    public void saveRegex(String stringRegexValues, Response response, String data) throws Throwable {
         if (!stringRegexValues.equals(""))
         {
-            String[] regexValuesStrings = stringRegexValues.split("_regex;\r\n");
+            String[] regexValuesStrings = stringRegexValues.split("(_regex;\r\n|_regex;)");
             int x = 0;
             while (x < regexValuesStrings.length)
             {
-                String regex, group,valExpected,scope,paramToSave,source,report;
+                String regex, group, columnCompare,scope,paramToSave,source,report;
                 String[] values = regexValuesStrings[x].split("',last,'");
                 regex = values[0].split("regex'")[1];
                 group = values[1];
-                valExpected = values[2];
+                columnCompare = values[2];
                 scope = values[3];
                 paramToSave = values[4].split("',end")[0];
 
@@ -252,9 +261,10 @@ public class BaseClass {
                 else
                     report += "buscado en: 'BODY'\nvalor obtenido: '"+this.valueOfRegex+"'";
 
-                if (!valExpected.equals("")) {
-                    assertEquals(valExpected,this.valueOfRegex);
-                    report += " - valor esperado: '" + valExpected + "'";
+                if (!columnCompare.equals("")) {
+                    String valToCompare = dataExcel(data,columnCompare);
+                    assertEquals(valToCompare,this.valueOfRegex);
+                    report += " - valor esperado: '" + valToCompare + "'";
                 }
                 Serenity.recordReportData().withTitle("Validador regex N°" + (x+1)).andContents(report);
                 if (!paramToSave.equals("")) {
@@ -295,25 +305,25 @@ public class BaseClass {
             return  "";
     }
 
-    public void saveJsonpath(String stringJsonpathVales,Response response)
-    {
+    public void saveJsonpath(String stringJsonpathVales,Response response, String data) throws Throwable {
         if (!stringJsonpathVales.equals(""))
         {
-            String[] regexValuesStrings = stringJsonpathVales.split("_jsonpath;\r\n");
+            String[] regexValuesStrings = stringJsonpathVales.split("(_jsonpath;\r\n|_jsonpath;)");
             int x = 0;
             while (x < regexValuesStrings.length)
             {
-                String jsonpath,valExpected,paramToSave,report;
+                String jsonpath, columnCompare,paramToSave,report;
                 String[] values = regexValuesStrings[x].split("',last,'");
                 jsonpath = values[0].split("jsonpath'")[1];
-                valExpected = values[1];
-                paramToSave = values[2].split("',end")[0];
+                columnCompare = values[1];
+                paramToSave = values[2].replace("',end","");
 
                 jsonPathExtractor(jsonpath,response);
                 report = "query de jsonpath: '"+ jsonpath+"'\nvalor obtenido: '"+this.valueOfJsonpath+"'";
-                if (!valExpected.equals("")) {
-                    assertEquals(valExpected,this.valueOfJsonpath);
-                    report += " - valor esperado: '" + valExpected + "'";
+                if (!columnCompare.equals("")) {
+                    String valToCompare = dataExcel(data,columnCompare);
+                    assertEquals(valToCompare,this.valueOfJsonpath);
+                    report += " - valor esperado: '" + valToCompare + "'";
                 }
                 Serenity.recordReportData().withTitle("Validador jsonpath N°" + (x+1)).andContents(report);
                 if (!paramToSave.equals("")) {
@@ -360,8 +370,11 @@ public class BaseClass {
         }else{
             if (currentResponse.getContentType().contains("application/json"))
             {
-                given().then().body(matchesJsonSchemaInClasspath("schemas/"+json+".json"));
-                Path jsonesperado = Paths.get("src/test/resources/schemas/"+json+".json");
+                if (json.contains(":"))
+                    given().then().body(matchesJsonSchemaInClasspath(json));
+                else
+                    given().then().body(matchesJsonSchemaInClasspath("schemas/"+json));
+                Path jsonesperado = Paths.get("src/test/resources/schemas/"+json);
                 Serenity.recordReportData().withTitle("Esquema Json Esperado").fromFile(jsonesperado);
             }
             else
