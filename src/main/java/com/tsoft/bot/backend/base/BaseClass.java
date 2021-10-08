@@ -4,6 +4,7 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.tsoft.bot.backend.objects.ServiceObjects;
 import com.tsoft.bot.both.utility.FileHelper;
+import com.tsoft.bot.both.utils.JsonUtils;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static org.junit.Assert.*;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static net.serenitybdd.rest.SerenityRest.given;
@@ -239,7 +242,7 @@ public class BaseClass {
                 group = values[1];
                 columnCompare = values[2];
                 scope = values[3];
-                paramToSave = values[4].split("',end")[0];
+                paramToSave = values[4].replace("',end","");
 
                 if (scope.equals("") || (scope.equals("BODY")) )
                     source = response.getBody().asString();
@@ -315,8 +318,15 @@ public class BaseClass {
                 String jsonpath, columnCompare,paramToSave,report;
                 String[] values = regexValuesStrings[x].split("',last,'");
                 jsonpath = values[0].split("jsonpath'")[1];
-                columnCompare = values[1];
+                if (values[1].equals("default")){
+                    columnCompare = jsonpath.replace("$.","");
+                }else{
+                    columnCompare = values[1];
+                }
                 paramToSave = values[2].replace("',end","");
+                if (paramToSave.equals("default")){
+                    paramToSave = jsonpath.replace("$.","");
+                }
 
                 jsonPathExtractor(jsonpath,response);
                 report = "query de jsonpath: '"+ jsonpath+"'\nvalor obtenido: '"+this.valueOfJsonpath+"'";
@@ -362,20 +372,22 @@ public class BaseClass {
         return formatString;
     }
 
-    public void validateJSONSchema(String json) throws IOException {
-        if (json.equals("")){
-            Serenity.recordReportData()
-                    .withTitle("No corresponde Validacion")
-                    .andContents("El nombre de archivo encontrado es: '"+json +"' Valor Vacio");
-        }else{
+    public void validateJSONSchema(String path) throws IOException {
+        if (!path.equals(""))
+        {
             if (currentResponse.getContentType().contains("application/json"))
             {
-                if (json.contains(":"))
-                    given().then().body(matchesJsonSchemaInClasspath(json));
-                else
-                    given().then().body(matchesJsonSchemaInClasspath("schemas/"+json));
-                Path jsonesperado = Paths.get("src/test/resources/schemas/"+json);
-                Serenity.recordReportData().withTitle("Esquema Json Esperado").fromFile(jsonesperado);
+                if (path.contains(":")) {
+                    Schema validator = SchemaLoader.load(JsonUtils.fileToJson(path));
+                    validator.validate(JsonUtils.stringToJson(currentResponse.getBody().asString()));
+                    Path jsonesperado = Paths.get(path);
+                    Serenity.recordReportData().withTitle("Esquema Json Esperado").fromFile(jsonesperado);
+                }else{
+                    Schema validator = SchemaLoader.load(JsonUtils.fileToJson(FileHelper.getProjectFolder() + "/src/test/resources/schemas/"+ path));
+                    validator.validate(JsonUtils.stringToJson(currentResponse.getBody().asString()));
+                    Path jsonesperado = Paths.get("src/test/resources/schemas/"+path);
+                    Serenity.recordReportData().withTitle("Esquema Json Esperado").fromFile(jsonesperado);
+                }
             }
             else
             {
