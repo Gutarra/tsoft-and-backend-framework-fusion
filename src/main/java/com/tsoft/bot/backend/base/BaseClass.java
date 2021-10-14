@@ -122,7 +122,7 @@ public class BaseClass {
             for (int i = 0; i < headers.length; i++)
             {
                 ReqManager.header(headers[i],values[i]);
-                report += headers[i]+","+values[i]+"\n";
+                report += headers[i]+": "+values[i]+"\n";
             }
             Serenity.recordReportData().withTitle("headers").andContents(report);
         }
@@ -193,7 +193,7 @@ public class BaseClass {
             for (int i = 0; i < keys.length; i++)
             {
                 ReqManager.param(keys[i],values[i]);
-                report += keys[i]+","+values[i]+"\n";
+                report += keys[i]+"="+values[i]+"\n";
             }
             Serenity.recordReportData().withTitle("parametros").andContents(report);
         }
@@ -266,8 +266,11 @@ public class BaseClass {
 
                 if (!columnCompare.equals("")) {
                     String valToCompare = dataExcel(data,columnCompare);
-                    assertEquals(valToCompare,this.valueOfRegex);
-                    report += " - valor esperado: '" + valToCompare + "'";
+                    if (!valToCompare.equals("")) {
+                        assertEquals(valToCompare,this.valueOfRegex);
+                        report += " - valor esperado: '" + valToCompare + "'";
+                    }
+
                 }
                 Serenity.recordReportData().withTitle("Validador regex N°" + (x+1)).andContents(report);
                 if (!paramToSave.equals("")) {
@@ -332,8 +335,10 @@ public class BaseClass {
                 report = "query de jsonpath: '"+ jsonpath+"'\nvalor obtenido: '"+this.valueOfJsonpath+"'";
                 if (!columnCompare.equals("")) {
                     String valToCompare = dataExcel(data,columnCompare);
-                    assertEquals(valToCompare,this.valueOfJsonpath);
-                    report += " - valor esperado: '" + valToCompare + "'";
+                    if (!valToCompare.equals("")){
+                        assertEquals(valToCompare,this.valueOfJsonpath);
+                        report += " - valor esperado: '" + valToCompare + "'";
+                    }
                 }
                 Serenity.recordReportData().withTitle("Validador jsonpath N°" + (x+1)).andContents(report);
                 if (!paramToSave.equals("")) {
