@@ -337,6 +337,8 @@ public class BaseClass {
                 if (!columnCompare.equals("")) {
                     String valToCompare = dataExcel(data,columnCompare);
                     if (!valToCompare.equals("")){
+                        valToCompare = valToCompare.replace("\n","");
+                        valToCompare = valToCompare.replace("\r","");
                         assertEquals(valToCompare,this.valueOfJsonpath);
                         report += " - valor esperado: '" + valToCompare + "'";
                     }
@@ -352,9 +354,9 @@ public class BaseClass {
         }
     }
     public void saveSimpleJSONPath(String expression, Response source, String data) throws Throwable {
-        if (!expression.equals("") && source.getContentType().contains("application/json"))
+        if (!expression.equals(""))
         {
-            String[] stringValues = expression.split(";");
+            String[] stringValues = expression.split("(;\n|;\n\r|;)");
             int x = 0;
             while (x < stringValues.length && !stringValues[x].equals(""))
             {
@@ -369,6 +371,7 @@ public class BaseClass {
                         save = jsonpath;
                     }
                 }
+                report = "extraer valor de: '" + jsonpath;
                 jsonpath = jsonpath.replace(".","..");
                 jsonpath = "$." + jsonpath;
                 Object document = Configuration.defaultConfiguration().jsonProvider().parse(source.getBody().asString());
@@ -376,20 +379,23 @@ public class BaseClass {
                     jsonpath = jsonpath + ".*";
                 }
                 this.valueOfJsonpath = JsonPath.read(document, jsonpath).toString();
-                report = "extraer valor de: '" + jsonpath + "'\nvalor obtenido: '" + this.valueOfJsonpath + "'";
+                this.valueOfJsonpath = this.valueOfJsonpath.replace("[","");
+                this.valueOfJsonpath = this.valueOfJsonpath.replace("]","");
+                report += "'\nvalor obtenido: \n{\n\t" + this.valueOfJsonpath.replace(",",",\n\t") + "\n}";
                 if(!compareWith.equals("")){
                     String valToCompare = dataExcel(data,compareWith);
                     if (!valToCompare.equals("")){
+                        valToCompare = valToCompare.replace("\n","");
+                        valToCompare = valToCompare.replace("\r","");
                         assertEquals(valToCompare,this.valueOfJsonpath);
-                        report += " - valor esperado: '" + valToCompare + "'";
+                        report += " - valor esperado: \n{\n\t" + valToCompare.replace(",",",\n\t") + "\n}";
                     }
                 }
-                Serenity.recordReportData().withTitle("validador simple de json path N°"+ (x+1)).andContents(report);
+                Serenity.recordReportData().withTitle("Validador simple de json path N°"+ (x+1)).andContents(report);
                 if(!save.equals("")){
                     saveParameter(save,this.valueOfJsonpath);
                 }
                 x++;
-                System.out.println(report);
             }
         }
     }

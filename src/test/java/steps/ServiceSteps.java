@@ -72,7 +72,7 @@ public class ServiceSteps extends BaseClass {
 
     @Y("capturamos datos mediante un jsonpath:{string}")
     public void capturamosDatosMedianteUnJsonpath(String data) throws Throwable {
-        saveSimpleJSONPath(dataExcel(data,ServiceExcelObjects.COLUMN_JSONPATH_SIMPLE),currentResponse,data);
         saveJsonpath(dataExcel(data,ServiceExcelObjects.COLUMN_JSONPATH),currentResponse,data);
+        saveSimpleJSONPath(dataExcel(data,ServiceExcelObjects.COLUMN_JSONPATH_SIMPLE),currentResponse,data);
     }
 }
