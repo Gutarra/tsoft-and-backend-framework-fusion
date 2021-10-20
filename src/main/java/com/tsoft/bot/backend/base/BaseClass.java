@@ -20,11 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static net.serenitybdd.rest.SerenityRest.expect;
 import static org.junit.Assert.*;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
 
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static net.serenitybdd.rest.SerenityRest.given;
 
 public class BaseClass {
@@ -314,12 +315,12 @@ public class BaseClass {
     public void saveJsonpath(String stringJsonpathVales,Response response, String data) throws Throwable {
         if (!stringJsonpathVales.equals(""))
         {
-            String[] regexValuesStrings = stringJsonpathVales.split("(_jsonpath;\r\n|_jsonpath;)");
+            String[] jsonpathValuesStrings = stringJsonpathVales.split("(_jsonpath;\r\n|_jsonpath;)");
             int x = 0;
-            while (x < regexValuesStrings.length)
+            while (x < jsonpathValuesStrings.length)
             {
                 String jsonpath, columnCompare,paramToSave,report;
-                String[] values = regexValuesStrings[x].split("',last,'");
+                String[] values = jsonpathValuesStrings[x].split("',last,'");
                 jsonpath = values[0].split("jsonpath'")[1];
                 if (values[1].equals("default")){
                     columnCompare = jsonpath.replace("$.","");
@@ -348,6 +349,48 @@ public class BaseClass {
                 x++;
             }
 
+        }
+    }
+    public void saveSimpleJSONPath(String expression, Response source, String data) throws Throwable {
+        if (!expression.equals("") && source.getContentType().contains("application/json"))
+        {
+            String[] stringValues = expression.split(";");
+            int x = 0;
+            while (x < stringValues.length && !stringValues[x].equals(""))
+            {
+                String jsonpath,save,compareWith,report;
+                jsonpath = stringValues[x];
+                compareWith = jsonpath;
+                save = "";
+                if (stringValues[x].contains(",")){
+                    jsonpath = stringValues[x].split(",")[0];
+                    save = stringValues[x].split(",")[0];
+                    if (save.equals("def")){
+                        save = jsonpath;
+                    }
+                }
+                jsonpath = jsonpath.replace(".","..");
+                jsonpath = "$." + jsonpath;
+                Object document = Configuration.defaultConfiguration().jsonProvider().parse(source.getBody().asString());
+                if(JsonPath.read(document, jsonpath).toString().contains("[[")){
+                    jsonpath = jsonpath + ".*";
+                }
+                this.valueOfJsonpath = JsonPath.read(document, jsonpath).toString();
+                report = "extraer valor de: '" + jsonpath + "'\nvalor obtenido: '" + this.valueOfJsonpath + "'";
+                if(!compareWith.equals("")){
+                    String valToCompare = dataExcel(data,compareWith);
+                    if (!valToCompare.equals("")){
+                        assertEquals(valToCompare,this.valueOfJsonpath);
+                        report += " - valor esperado: '" + valToCompare + "'";
+                    }
+                }
+                Serenity.recordReportData().withTitle("validador simple de json path N°"+ (x+1)).andContents(report);
+                if(!save.equals("")){
+                    saveParameter(save,this.valueOfJsonpath);
+                }
+                x++;
+                System.out.println(report);
+            }
         }
     }
 

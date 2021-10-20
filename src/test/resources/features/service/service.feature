@@ -12,13 +12,13 @@ Característica: Probar APIs
 		Y verificamos el status code:"<Dato>"
 		Y validamos el Content-Type de la respuesta: "<Dato>"
 		Cuando la respuesta es de tipo applicationjson se valida mediante un squema json:"<Dato>"
-		Y capturamos un dato mediante una regex:"<Dato>"
-		Y capturamos un dato mediante un jsonpath:"<Dato>"
+		Y capturamos datos mediante una regex:"<Dato>"
+		Y capturamos datos mediante un jsonpath:"<Dato>"
 
 		Ejemplos:
 	  		|     Excel          |    Dato       |
 	  		| ProyectoAPI.xlsm   | 1             |
-	  		| ProyectoAPI.xlsm   | 2             |
-	  		| ProyectoAPI.xlsm   | 3             |
-	  		| ProyectoAPI.xlsm   | 11            |
-	  		| ProyectoAPI.xlsm   | 12            |
+	  		#| ProyectoAPI.xlsm   | 2             |
+	  		#| ProyectoAPI.xlsm   | 3             |
+	  		#| ProyectoAPI.xlsm   | 11            |
+	  		#| ProyectoAPI.xlsm   | 12            |

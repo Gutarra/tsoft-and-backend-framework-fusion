@@ -15,4 +15,5 @@ public class ServiceExcelObjects {
     public static final String COLUMN_VLDEJ = "VALIDAR ESQUEMA JSON";
     public static final String COLUMN_REGEX = "REGULAR EXPRESSION";
     public static final String COLUMN_JSONPATH = "JSONPATH";
+    public static final String COLUMN_JSONPATH_SIMPLE = "VALIDADOR JSON";
 }

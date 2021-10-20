@@ -65,13 +65,14 @@ public class ServiceSteps extends BaseClass {
         validateJSONSchema(jsonSchema);
     }
 
-    @Y("capturamos un dato mediante una regex:{string}")
-    public void capturamosUnDatoMedianteUnaRegex(String data) throws Throwable {
+    @Y("capturamos datos mediante una regex:{string}")
+    public void capturamosDatosMedianteUnaRegex(String data) throws Throwable {
         saveRegex(dataExcel(data,ServiceExcelObjects.COLUMN_REGEX),currentResponse,data);
     }
 
-    @Y("capturamos un dato mediante un jsonpath:{string}")
-    public void capturamosUnDatoMedianteUnJsonpath(String data) throws Throwable {
+    @Y("capturamos datos mediante un jsonpath:{string}")
+    public void capturamosDatosMedianteUnJsonpath(String data) throws Throwable {
+        saveSimpleJSONPath(dataExcel(data,ServiceExcelObjects.COLUMN_JSONPATH_SIMPLE),currentResponse,data);
         saveJsonpath(dataExcel(data,ServiceExcelObjects.COLUMN_JSONPATH),currentResponse,data);
     }
 }
