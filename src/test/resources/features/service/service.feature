@@ -18,7 +18,8 @@ Característica: Probar APIs
 		Ejemplos:
 	  		|     Excel          |    Dato       |
 	  		| ProyectoAPI.xlsm   | 2             |
-	  		#| ProyectoAPI.xlsm   | 2             |
-	  		#| ProyectoAPI.xlsm   | 3             |
-	  		#| ProyectoAPI.xlsm   | 11            |
-	  		#| ProyectoAPI.xlsm   | 12            |
+	  		| ProyectoAPI.xlsm   | 3             |
+	  		# | ProyectoAPI.xlsm   | 1             |
+	  		# | ProyectoAPI.xlsm   | 3             |
+	  		# | ProyectoAPI.xlsm   | 12            |
+	  		# | ProyectoAPI.xlsm   | 13            |

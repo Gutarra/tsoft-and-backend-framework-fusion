@@ -41,7 +41,7 @@ public class BaseClass {
     }
     public void setTestDetails(String testcase, String description)
     {
-        String details = "CASO: " + testcase + ", " + description;
+        String details = "CASO: " + testcase + ",\n" + description;
         Serenity.recordReportData().withTitle("Detalles del caso").andContents(details);
     }
 
@@ -366,7 +366,8 @@ public class BaseClass {
                 save = "";
                 if (stringValues[x].contains(",")){
                     jsonpath = stringValues[x].split(",")[0];
-                    save = stringValues[x].split(",")[0];
+                    compareWith = jsonpath;
+                    save = stringValues[x].split(",")[1];
                     if (save.equals("def")){
                         save = jsonpath;
                     }
@@ -381,9 +382,11 @@ public class BaseClass {
                 this.valueOfJsonpath = JsonPath.read(document, jsonpath).toString();
                 this.valueOfJsonpath = this.valueOfJsonpath.replace("[","");
                 this.valueOfJsonpath = this.valueOfJsonpath.replace("]","");
+                this.valueOfJsonpath = this.valueOfJsonpath.replace("\"","");
                 report += "'\nvalor obtenido: \n{\n\t" + this.valueOfJsonpath.replace(",",",\n\t") + "\n}";
                 if(!compareWith.equals("")){
                     String valToCompare = dataExcel(data,compareWith);
+                    System.out.println(compareWith);
                     if (!valToCompare.equals("")){
                         valToCompare = valToCompare.replace("\n","");
                         valToCompare = valToCompare.replace("\r","");
