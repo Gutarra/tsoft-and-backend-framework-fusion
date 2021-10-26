@@ -46,9 +46,9 @@ public class BaseClass {
     }
 
     protected List<HashMap<String, String>> getData;
-
+    public String test_case;
     //Metodo integrado :P
-    public String dataExcel(String test_case, String col) throws Throwable {
+    public String dataExcel(String col) throws Throwable {
         int countPage = Integer.parseInt(test_case) - 1;
         return getData.get(countPage).get(col);
     }
@@ -230,7 +230,7 @@ public class BaseClass {
             delete();
     }
 
-    public void saveRegex(String stringRegexValues, Response response, String data) throws Throwable {
+    public void saveRegex(String stringRegexValues, Response response) throws Throwable {
         if (!stringRegexValues.equals(""))
         {
             String[] regexValuesStrings = stringRegexValues.split("(_regex;\r\n|_regex;)");
@@ -266,7 +266,7 @@ public class BaseClass {
                     report += "buscado en: 'BODY'\nvalor obtenido: '"+this.valueOfRegex+"'";
 
                 if (!columnCompare.equals("")) {
-                    String valToCompare = dataExcel(data,columnCompare);
+                    String valToCompare = dataExcel(columnCompare);
                     if (!valToCompare.equals("")) {
                         assertEquals(valToCompare,this.valueOfRegex);
                         report += " - valor esperado: '" + valToCompare + "'";
@@ -312,7 +312,7 @@ public class BaseClass {
             return  "";
     }
 
-    public void saveJsonpath(String stringJsonpathVales,Response response, String data) throws Throwable {
+    public void saveJsonpath(String stringJsonpathVales,Response response) throws Throwable {
         if (!stringJsonpathVales.equals(""))
         {
             String[] jsonpathValuesStrings = stringJsonpathVales.split("(_jsonpath;\r\n|_jsonpath;)");
@@ -335,7 +335,7 @@ public class BaseClass {
                 jsonPathExtractor(jsonpath,response);
                 report = "query de jsonpath: '"+ jsonpath+"'\nvalor obtenido: '"+this.valueOfJsonpath+"'";
                 if (!columnCompare.equals("")) {
-                    String valToCompare = dataExcel(data,columnCompare);
+                    String valToCompare = dataExcel(columnCompare);
                     if (!valToCompare.equals("")){
                         valToCompare = valToCompare.replace("\n","");
                         valToCompare = valToCompare.replace("\r","");
@@ -353,7 +353,7 @@ public class BaseClass {
 
         }
     }
-    public void saveSimpleJSONPath(String expression, Response source, String data) throws Throwable {
+    public void saveSimpleJSONPath(String expression, Response source) throws Throwable {
         if (!expression.equals(""))
         {
             String[] stringValues = expression.split("(;\n|;\n\r|;)");
@@ -385,7 +385,7 @@ public class BaseClass {
                 this.valueOfJsonpath = this.valueOfJsonpath.replace("\"","");
                 report += "'\nvalor obtenido: \n{\n\t" + this.valueOfJsonpath.replace(",",",\n\t") + "\n}";
                 if(!compareWith.equals("")){
-                    String valToCompare = dataExcel(data,compareWith);
+                    String valToCompare = dataExcel(compareWith);
                     System.out.println(compareWith);
                     if (!valToCompare.equals("")){
                         valToCompare = valToCompare.replace("\n","");

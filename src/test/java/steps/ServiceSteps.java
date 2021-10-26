@@ -14,32 +14,33 @@ public class ServiceSteps extends BaseClass {
     public void queSeProporcionaUnArchivoConElDatoParaLaPrueba(String ruta,String data) throws Throwable {
         setExcel(ruta);
         this.getData = ExcelReader.data(this.RUTA_EXCEL, ServiceExcelObjects.PAGE_DATA);
-        setTestDetails(dataExcel(data,ServiceExcelObjects.COLUMN_CASE), dataExcel(data,ServiceExcelObjects.COLUMN_DESC));
+        this.test_case = data;
+        setTestDetails(dataExcel(ServiceExcelObjects.COLUMN_CASE), dataExcel(ServiceExcelObjects.COLUMN_DESC));
     }
 
-    @Cuando("configuramos la url desde el : {string}")
-    public void configuramosLaUrlDesdeEl(String dato) throws Throwable {
-        setURL(dataExcel(dato,ServiceExcelObjects.COLUMN_RUTA));
+    @Cuando("configuramos la url")
+    public void configuramosLaUrlDesdeEl() throws Throwable {
+        setURL(dataExcel(ServiceExcelObjects.COLUMN_RUTA));
     }
 
-    @Y("se configura el metodo de la solicitud: {string}")
-    public void seConfiguraElMetodoDeLaSolicitud(String dato) throws Throwable {
-        configureMethod(dataExcel(dato,ServiceExcelObjects.COLUMN_METHOD));
+    @Y("se configura el metodo de la solicitud")
+    public void seConfiguraElMetodoDeLaSolicitud() throws Throwable {
+        configureMethod(dataExcel(ServiceExcelObjects.COLUMN_METHOD));
     }
 
-    @Y("agregamos los headers desde el {string}")
-    public void agregamosLosHeadersDesdeEl(String dato) throws Throwable {
-        setHeaders(dataExcel(dato,ServiceExcelObjects.COLUMN_HEADERS));
+    @Y("agregamos los headers")
+    public void agregamosLosHeadersDesdeEl() throws Throwable {
+        setHeaders(dataExcel(ServiceExcelObjects.COLUMN_HEADERS));
     }
 
-    @Y("adjuntamos el body a la solicitud desde el {string}")
-    public void adjuntamosElBodyALaSolicitudDesdeEl(String dato) throws Throwable {
-        addBody(dataExcel(dato,ServiceExcelObjects.COLUMN_BODY));
+    @Y("adjuntamos el body a la solicitud")
+    public void adjuntamosElBodyALaSolicitudDesdeEl() throws Throwable {
+        addBody(dataExcel(ServiceExcelObjects.COLUMN_BODY));
     }
 
-    @Y("configuramos los parameters o query strings desde el {string}")
-    public void configuramosLosParametersOQueryStringsDesdeEl(String dato) throws Throwable {
-        setParameters(dataExcel(dato,ServiceExcelObjects.COLUMN_PARAMETERS));
+    @Y("configuramos los parameters o query strings")
+    public void configuramosLosParametersOQueryStringsDesdeEl() throws Throwable {
+        setParameters(dataExcel(ServiceExcelObjects.COLUMN_PARAMETERS));
     }
 
     @Entonces("enviamos la solicitud al servidor")
@@ -47,32 +48,32 @@ public class ServiceSteps extends BaseClass {
         sendRequest();
     }
 
-    @Y("verificamos el status code:{string}")
-    public void verificamosElStatusCode(String dato) throws Throwable {
-        int statusCodeExpected = Integer.parseInt(dataExcel(dato, ServiceExcelObjects.COLUMN_CRE));
+    @Y("verificamos el status code")
+    public void verificamosElStatusCode() throws Throwable {
+        int statusCodeExpected = Integer.parseInt(dataExcel(ServiceExcelObjects.COLUMN_CRE));
         currentResponse.then().statusCode(statusCodeExpected);
     }
 
-    @Y("validamos el Content-Type de la respuesta: {string}")
-    public void validamosElContentTypeDeLaRespuesta(String dato) throws Throwable {
-        String contentTypeExpected = dataExcel(dato, ServiceExcelObjects.COLUMN_VALIDATECTYPE);
+    @Y("validamos el Content-Type de la respuesta")
+    public void validamosElContentTypeDeLaRespuesta() throws Throwable {
+        String contentTypeExpected = dataExcel(ServiceExcelObjects.COLUMN_VALIDATECTYPE);
         currentResponse.then().contentType(contentTypeExpected);
     }
 
-    @Cuando("la respuesta es de tipo applicationjson se valida mediante un squema json:{string}")
-    public void laRespuestaEsDeTipoApplicationJsonSeValidaMedianteUnSquemaJson(String dato) throws Throwable {
-        String jsonSchema = dataExcel(dato, ServiceExcelObjects.COLUMN_VLDEJ);
+    @Cuando("la respuesta es de tipo applicationjson se valida mediante el squema json")
+    public void laRespuestaEsDeTipoApplicationJsonSeValidaMedianteElSquemaJson() throws Throwable {
+        String jsonSchema = dataExcel(ServiceExcelObjects.COLUMN_VLDEJ);
         validateJSONSchema(jsonSchema);
     }
 
-    @Y("capturamos datos mediante una regex:{string}")
-    public void capturamosDatosMedianteUnaRegex(String data) throws Throwable {
-        saveRegex(dataExcel(data,ServiceExcelObjects.COLUMN_REGEX),currentResponse,data);
+    @Y("capturamos datos mediante una regex")
+    public void capturamosDatosMedianteUnaRegex() throws Throwable {
+        saveRegex(dataExcel(ServiceExcelObjects.COLUMN_REGEX),currentResponse);
     }
 
-    @Y("capturamos datos mediante un jsonpath:{string}")
-    public void capturamosDatosMedianteUnJsonpath(String data) throws Throwable {
-        saveJsonpath(dataExcel(data,ServiceExcelObjects.COLUMN_JSONPATH),currentResponse,data);
-        saveSimpleJSONPath(dataExcel(data,ServiceExcelObjects.COLUMN_JSONPATH_SIMPLE),currentResponse,data);
+    @Y("capturamos datos mediante un jsonpath")
+    public void capturamosDatosMedianteUnJsonpath() throws Throwable {
+        saveJsonpath(dataExcel(ServiceExcelObjects.COLUMN_JSONPATH),currentResponse);
+        saveSimpleJSONPath(dataExcel(ServiceExcelObjects.COLUMN_JSONPATH_SIMPLE),currentResponse);
     }
 }
