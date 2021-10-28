@@ -1,4 +1,4 @@
-package com.tsoft.bot.both.utils;
+package com.tsoft.bot.both.utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;

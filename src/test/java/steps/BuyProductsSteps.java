@@ -2,43 +2,61 @@ package steps;
 
 import com.tsoft.bot.frontend.helpers.Hook;
 import com.tsoft.bot.frontend.pages.OpenCartPage;
-import cucumber.api.java.es.Y;
+
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import io.cucumber.java.es.Dado;
+import io.cucumber.java.es.Cuando;
+import io.cucumber.java.es.Entonces;
+import io.cucumber.java.es.Y;
 import org.openqa.selenium.WebDriver;
 
 import java.io.IOException;
 
 public class BuyProductsSteps {
 
-    private WebDriver browser = Hook.getDriver();
+    private WebDriver browser ;
     private OpenCartPage thepage = new OpenCartPage(browser);
 
     public BuyProductsSteps() throws IOException {
+        this.browser = Hook.getDriver();
     }
 
-    @Given("^go to the website$")
-    public void goToTheWebsite() {
+    @Dado("que el usuario ingresa a la página")
+    public void queElUsuarioIngresaALaPágina() {
         System.out.println("Welcome ...");
     }
 
-    @When("^the user \"([^\"]*)\" sign in on page$")
-    public void theUserSignInOnPage(Integer testCase) throws Throwable {
+    @Cuando("inicia sesion en la página según el {int}")
+    public void iniciaSesionEnLaPáginaSegunEl(Integer testCase)throws Throwable {
         thepage.toSignIn(testCase);
         thepage.signIn(testCase);
     }
 
-    @And("^buying two laptops and a camera$")
-    public void buyingTwoLaptopsAndACamera() throws Throwable {
+    @Y("ingresa al listado de productos")
+    public void ingresaAlListadoDeProductos() throws Throwable {
         thepage.buyLaptops();
         thepage.buyCamera();
         thepage.toShoppingCart();
     }
 
-    @And("^the user records more details \"([^\"]*)\"$")
-    public void theUserRecordsMoreDetails(Integer testCase) throws Throwable {
+    @Y("selecciona un producto")
+    public void seleccionaUnProducto() throws Throwable {
+
+        thepage.buyLaptops();
+        thepage.buyCamera();
+    }
+
+    @Entonces("se agrega al carrito de compras")
+    public void seAgregaAlCarritoDeCompras() throws Throwable {
+        thepage.toShoppingCart();
+    }
+
+    @Y("registra los datos para el envio {int}")
+    public void registraLosDatosParaElEnvio(Integer testCase) throws Throwable {
         thepage.continueOnBilling(testCase);
         thepage.continueOnDelivery();
         thepage.continueOnDeliveryMethod();
@@ -46,8 +64,8 @@ public class BuyProductsSteps {
         thepage.confirmOrder();
     }
 
-    @Then("^the order is registered$")
-    public void theOrderIsRegistered() throws Throwable {
+    @Entonces("se confirma la creacción de la orden")
+    public void seConfirmaLaCreacciónDeLaOrden() throws Throwable{
         thepage.compareResult();
     }
 }

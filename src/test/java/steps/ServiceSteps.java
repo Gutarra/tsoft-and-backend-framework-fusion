@@ -12,9 +12,7 @@ public class ServiceSteps extends BaseClass {
 
     @Dado("que se proporciona un archivo {string} con el {string} para la prueba")
     public void queSeProporcionaUnArchivoConElDatoParaLaPrueba(String ruta,String data) throws Throwable {
-        setExcel(ruta);
-        this.getData = ExcelReader.data(this.RUTA_EXCEL, ServiceExcelObjects.PAGE_DATA);
-        this.test_case = data;
+        ExcelReader.setExcel(ruta,data);
         setTestDetails(dataExcel(ServiceExcelObjects.COLUMN_CASE), dataExcel(ServiceExcelObjects.COLUMN_DESC));
     }
 

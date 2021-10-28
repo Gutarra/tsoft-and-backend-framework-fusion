@@ -1,13 +1,16 @@
-Feature: Buying products
+# language: es
+Característica: Transacciones en la página opencart.abstracta.us
 
     @buy-product
-    Scenario Outline: Buying three products in opencart.abstracta.us
-        Given go to the website
-        When the user "<test_case>" sign in on page
-        And buying two laptops and a camera
-        And the user records more details "<test_case>"
-        Then the order is registered
+    Esquema del escenario: Comprar productos online
+        Dado que el usuario ingresa a la página
+        Cuando inicia sesion en la página según el <caso>
+        Y ingresa al listado de productos
+        Y selecciona un producto
+        Entonces se agrega al carrito de compras
+        Y registra los datos para el envio <caso>
+        Entonces se confirma la creacción de la orden
 
-        Examples:
-        | test_case |
-        | 1         |
+        Ejemplos:
+            | caso |
+            | 2    |

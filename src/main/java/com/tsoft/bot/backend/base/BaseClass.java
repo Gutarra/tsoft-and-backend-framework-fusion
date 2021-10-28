@@ -3,8 +3,9 @@ package com.tsoft.bot.backend.base;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.tsoft.bot.backend.objects.ServiceObjects;
+import com.tsoft.bot.both.utility.ExcelReader;
 import com.tsoft.bot.both.utility.FileHelper;
-import com.tsoft.bot.both.utils.JsonUtils;
+import com.tsoft.bot.both.utility.JsonUtils;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -16,12 +17,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.serenitybdd.rest.SerenityRest.expect;
 import static org.junit.Assert.*;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -29,28 +27,23 @@ import org.everit.json.schema.loader.SchemaLoader;
 import static net.serenitybdd.rest.SerenityRest.given;
 
 public class BaseClass {
-    protected String RUTA_EXCEL;
-    protected String METODO;
     protected String URL;
-
+    protected String METODO;
     protected String valueOfJsonpath;
     protected String valueOfRegex;
 
-    public void setExcel(String ruta) {
-        this.RUTA_EXCEL = ruta;
-    }
+
     public void setTestDetails(String testcase, String description)
     {
         String details = "CASO: " + testcase + ",\n" + description;
         Serenity.recordReportData().withTitle("Detalles del caso").andContents(details);
     }
 
-    protected List<HashMap<String, String>> getData;
-    public String test_case;
-    //Metodo integrado :P
     public String dataExcel(String col) throws Throwable {
-        int countPage = Integer.parseInt(test_case) - 1;
-        return getData.get(countPage).get(col);
+        String testCase = ExcelReader.getTest_case();
+
+        int countPage = Integer.parseInt(testCase) - 1;
+        return ExcelReader.getImportedData().get(countPage).get(col);
     }
 
 

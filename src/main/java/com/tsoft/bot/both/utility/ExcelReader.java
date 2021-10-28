@@ -1,5 +1,6 @@
 package com.tsoft.bot.both.utility;
 
+import com.tsoft.bot.backend.objects.ServiceExcelObjects;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -18,7 +19,25 @@ import java.util.logging.Logger;
 
 
 public class ExcelReader {
+
+    protected static String RUTA_EXCEL;
+    protected static String test_case;
+    protected static List<HashMap<String, String>> importedData;
+
     private ExcelReader() {
+    }
+
+    public static String getTest_case() {
+        return test_case;
+    }
+    public static List<HashMap<String, String>> getImportedData() {
+        return importedData;
+    }
+
+    public static void setExcel(String ruta, String fila) throws Exception {
+        test_case = fila;
+        RUTA_EXCEL = ruta;
+        importedData = data(RUTA_EXCEL, ServiceExcelObjects.PAGE_DATA);
     }
 
     public static List<HashMap<String, String>> data(String rutaRelativaExcel, String nombreHoja) throws Exception {
